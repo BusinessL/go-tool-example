@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package Demo;
+
+service Hello {
+    rpc SayHello (HelloRequest) returns (HelloResponse) {};
+}
+
+message HelloRequest {
+    string username = 1;
+}
+
+message HelloResponse {
+    int64 code = 2;
+    string message = 1;
+}
