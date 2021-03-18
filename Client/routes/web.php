@@ -11,13 +11,11 @@
 |
 */
 
-
-
 Route::get('/', function () {
     $services = new \Gtool\Service('0.0.0.0:9502', 'Demo');
 
     $helloRequest = new Demo\HelloRequest();
     $helloRequest->setUsername('ku');
-    $response = $services->unaryCall('HelloClient', 'SayHello', $helloRequest);
+    $response = $services->unaryCall('Hello', 'SayHello', $helloRequest);
     var_dump($response);
 });

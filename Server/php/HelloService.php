@@ -1,38 +1,27 @@
 <?php
 
+require "../../Proto/Demo/HelloResponse.php";
+require "../../Proto/GPBMetadata/Hello.php";
+
 $http = new \Swoole\Http\Server('0.0.0.0', 9502);
 
 $http->set([
     'open_http2_protocol' => true,
 ]);
-
 $http->on('workerStart', function (\Swoole\Http\Server $server) {
     echo "workerStart \n";
 });
-
 $http->on('request', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
     // request_uri 和 proto 文件中 rpc 对应关系: /{package}.{service}/{rpc}
     $path = $request->server['request_uri'];
-    echo $path;
-    $response->end('3223');
-    if ($path == '/demo.Hello/SayHello') {
-//        echo 'haha';
-        // decode, 获取 rpc 中的请求
-//        $request_message = \Grpc\Parser::deserializeMessage([HelloRequest::class, null], $request->rawContent());
-//
-//        // encode, 返回 rpc 中的应答
-//        $response_message = new HelloReply();
-//        $response_message->setMessage('Hello ' . $request_message->getName());
-//        $response->header('content-type', 'application/grpc');
-//        $response->header('trailer', 'grpc-status, grpc-message');
-//        $trailer = [
-//            "grpc-status" => "0",
-//            "grpc-message" => ""
-//        ];
-//        foreach ($trailer as $trailer_name => $trailer_value) {
-//            $response->trailer($trailer_name, $trailer_value);
-//        }
-//        $response->end(\Grpc\Parser::serializeMessage($response_message));
+
+    if ($path == '/Demo.Hello/SayHello') {
+        $response_message = new \Demo\HelloResponse();
+
+        $response_message->setCode(200);
+        $response_message->setMessage('Hello ' . $request->rawContent());
+
+        $response->end($response_message->serializeToString());
     }
 });
 
